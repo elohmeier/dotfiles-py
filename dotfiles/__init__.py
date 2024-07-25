@@ -7,7 +7,7 @@
     up to you. You can use a VCS like git, Dropbox, or even rsync to distribute
     your dotfiles repository across multiple hosts.
 
-    :copyright: (c) 2011-2014 by Jon Bernard.
+    :copyright: (c) 2011-2024 by Jon Bernard.
     :license: ISC, see LICENSE.rst for more details.
 """
 
