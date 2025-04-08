@@ -24,6 +24,7 @@ repo_settings = {
     'homedir': Repository.defaults['homedir'],
     'packages': Repository.defaults['packages'],
     'externals': Repository.defaults['externals'],
+    'no_dot_prefix': Repository.defaults['no_dot_prefix'],
 }
 
 
@@ -160,6 +161,11 @@ def parse_config(config_file):
         except configparser.NoSectionError:
             break
 
+    try:
+        opts['no_dot_prefix'] = parser.getboolean('dotfiles', 'no_dot_prefix')
+    except (configparser.NoOptionError, configparser.NoSectionError):
+        pass
+
     for entry in ('ignore', 'externals', 'packages'):
         try:
             opts[entry] = eval(parser.get('dotfiles', entry))
@@ -241,7 +247,10 @@ def main():
                                repo_config_opts.get('prefix') or
                                config_opts.get('prefix') or
                                repo_settings['prefix'])
-    repo_settings['no_dot_prefix'] = cli_opts.no_dot_prefix
+    repo_settings['no_dot_prefix'] = (cli_opts.no_dot_prefix or
+                                     repo_config_opts.get('no_dot_prefix') or
+                                     config_opts.get('no_dot_prefix') or
+                                     repo_settings['no_dot_prefix'])
 
     update_settings(repo_config_opts, 'ignore')
     update_settings(repo_config_opts, 'externals')
