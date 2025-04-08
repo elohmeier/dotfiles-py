@@ -16,3 +16,4 @@ dotfiles.egg-info/
 
 Gemfile
 Gemfile.lock
+.python-version
