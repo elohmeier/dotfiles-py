@@ -140,8 +140,11 @@ class Dotfiles(object):
 
         src_dir = os.path.join(self.repository, sub_dir)
         if sub_dir:
-            # Add a dot to first level of packages
-            dst_dir = os.path.join(self.homedir, '.%s' % sub_dir)
+            # Add a dot to first level of packages if no_dot_prefix is False
+            if self.no_dot_prefix:
+                dst_dir = os.path.join(self.homedir, sub_dir)
+            else:
+                dst_dir = os.path.join(self.homedir, '.%s' % sub_dir)
         else:
             dst_dir = os.path.join(self.homedir, sub_dir)
 

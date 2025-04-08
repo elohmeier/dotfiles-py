@@ -380,6 +380,38 @@ class DotfilesTestCase(unittest.TestCase):
             self.assertPathEqual(
                 os.path.join(self.repository, dotfile),
                 os.path.join(self.homedir, dotfile))
+                
+    def test_no_dot_prefix_with_packages(self):
+        """Test no_dot_prefix option with packages."""
+        
+        # Create package structure
+        package_name = 'config'
+        files = ['foo', f'{package_name}/bar']
+        expected_symlinks = ['foo', f'{package_name}/bar']  # No dots with no_dot_prefix=True
+        join = os.path.join
+
+        # Create files
+        for filename in files:
+            path = join(self.repository, filename)
+            dirname = os.path.dirname(path)
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            touch(path)
+
+        # Create Dotfiles object with no_dot_prefix=True
+        dotfiles = Dotfiles(
+                homedir=self.homedir, path=self.repository,
+                prefix='', ignore=[], externals={}, packages=[package_name],
+                dry_run=False, no_dot_prefix=True)
+
+        # Create symlinks in homedir
+        dotfiles.sync()
+
+        # Verify it created what we expect without dot prefixes
+        self.assertTrue(os.path.isdir(join(self.homedir, package_name)))
+        for src, dst in zip(files, expected_symlinks):
+            self.assertTrue(is_link_to(join(self.homedir, dst),
+                join(self.repository, src)))
 
     @pytest.mark.xfail()
     def test_add_package_file(self):
